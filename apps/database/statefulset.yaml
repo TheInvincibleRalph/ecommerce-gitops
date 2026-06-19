@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database
+  namespace: database-system
+spec:
+  serviceName: "database"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+      - name: db-container
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "supersecret" # Fine for a development, will work on securing this later
+        ports:
+        - containerPort: 5432

@@ -1,0 +1,29 @@
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        apiVersion: karpenter.k8s.aws/v1beta1
+        kind: EC2NodeClass
+        name: default
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: kubernetes.io/os
+          operator: In
+          values: ["linux"]
+        # Allow Karpenter to buy Spot instances to save money
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot", "on-demand"]
+        # Restrict the instance types to prevent massive AWS bills
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t", "m"]
+  # A hard limit: Never allow the cluster to grow larger than 100 CPUs total
+  limits:
+    cpu: "100"

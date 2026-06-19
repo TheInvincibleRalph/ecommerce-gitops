@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-monolith
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: core-monolith
+  template:
+    metadata:
+      labels:
+        app: core-monolith
+    spec:
+      containers:
+      - name: app-container
+        image: nginx:alpine # A lightweight placeholder for testing
+        ports:
+        - containerPort: 80

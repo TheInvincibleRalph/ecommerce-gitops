@@ -1,0 +1,13 @@
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  name: default
+spec:
+  amiFamily: AL2 
+  role: "karpenter-controller-gitops-ecommerce-prod" 
+  subnetSelectorTerms:
+    - tags:
+        kubernetes.io/cluster/gitops-ecommerce-prod: "owned"
+  securityGroupSelectorTerms:
+    - tags:
+        kubernetes.io/cluster/gitops-ecommerce-prod: "owned"
