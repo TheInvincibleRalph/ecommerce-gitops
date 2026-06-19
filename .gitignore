@@ -1,0 +1,15 @@
+.terraform.lock.hcl
+*.tfstate.backup
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files (Ignore secrets!)
+*.tfvars
+*.tfvars.json
+*.pem
+*.key
