@@ -5,6 +5,10 @@ module "eks" {
   cluster_name    = var.cluster_name
   cluster_version = "1.30"
 
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+  enable_cluster_creator_admin_permissions = true
+
   vpc_id     = var.vpc_id
   subnet_ids = var.subnet_ids
 
@@ -38,65 +42,4 @@ module "karpenter_irsa" {
       namespace_service_accounts = ["karpenter:karpenter"]
     }
   }
-}
-
-
-resource "kubernetes_namespace" "argocd" {
-  metadata {
-    name = "argocd"
-  }
-}
-
-# Install ArgoCD via Helm
-resource "helm_release" "argocd" {
-  name       = "argocd"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  version    = "7.1.3"
-  namespace  = kubernetes_namespace.argocd.metadata[0].name
-
-  # Enable server-side apply for large Custom Resource Definitions (CRDs)
-  set {
-    name  = "crds.keep"
-    value = "true"
-  }
-
-  lifecycle {
-    prevent_destroy = false
-  }
-}
-
-resource "kubernetes_manifest" "root_app" {
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name      = "root-bootstrap"
-      namespace = "argocd"
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = "https://github.com/TheInvincibleRalph/ecommerce-gitops.git"
-        targetRevision = "HEAD"
-        path           = "clusters/argocd-apps"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "argocd"
-      }
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = true
-        }
-        syncOptions = [
-          "CreateNamespace=true"
-        ]
-      }
-    }
-  }
-
-  # CRITICAL: Ensures ArgoCD CRDs exist in the API server before applying this manifest
-  depends_on = [helm_release.argocd] 
 }
