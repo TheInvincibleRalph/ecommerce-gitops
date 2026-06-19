@@ -17,3 +17,8 @@ output "oidc_provider_arn" {
   description = "The ARN of the OIDC Provider"
   value       = module.eks.oidc_provider_arn
 }
+
+output "karpenter_iam_role_arn" {
+  description = "The IAM Role ARN for the Karpenter controller"
+  value       = module.karpenter_irsa.iam_role_arn
+}
