@@ -88,3 +88,30 @@ resource "kubernetes_manifest" "root_app" {
   # CRITICAL: Ensures ArgoCD CRDs exist in the API server before applying this manifest
   depends_on = [helm_release.argocd] 
 }
+
+
+# Install Karpenter Controller via Helm
+resource "helm_release" "karpenter" {
+  name             = "karpenter"
+  namespace        = "karpenter"
+  create_namespace = true
+  
+  # Karpenter is hosted on AWS's public Elastic Container Registry
+  repository       = "oci://public.ecr.aws/karpenter"
+  chart            = "karpenter"
+  
+  version          = "0.37.0" 
+
+  values = [
+    <<-EOT
+    settings:
+      clusterName: ${module.eks.cluster_name}
+      clusterEndpoint: ${module.eks.cluster_endpoint}
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: ${module.eks.karpenter_iam_role_arn}
+    EOT
+  ]
+
+  depends_on = [module.eks]
+}
