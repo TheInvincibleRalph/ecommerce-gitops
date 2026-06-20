@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: app-container
-        image: nginx:alpine # A lightweight placeholder for testing
+        image: 681504525746.dkr.ecr.us-east-2.amazonaws.com/core-monolith:58910e5c3c9be3c9ac187632c9f9e5402d46d0cb
         ports:
         - containerPort: 80
