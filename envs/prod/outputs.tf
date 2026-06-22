@@ -17,3 +17,7 @@ output "oidc_provider_arn" {
   description = "The ARN of the OIDC Provider"
   value       = module.eks.oidc_provider_arn
 }
+
+output "github_actions_role_arn" {
+  value = module.iam_github_oidc_role.arn
+}

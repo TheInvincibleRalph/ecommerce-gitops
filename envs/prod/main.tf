@@ -115,3 +115,31 @@ resource "helm_release" "karpenter" {
 
   depends_on = [module.eks]
 }
+
+# 1. The Docker Image Registry
+resource "aws_ecr_repository" "monolith" {
+  name                 = "core-monolith"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+}
+
+# 2. The OIDC Provider (Allows GitHub to talk to AWS)
+module "iam_github_oidc_provider" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-provider"
+  version = "~> 5.0"
+}
+
+# 3. The IAM Role GitHub will assume
+module "iam_github_oidc_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-role"
+  version = "~> 5.0"
+  
+  name = "github-actions-ecr-push"
+  
+  subjects = ["repo:TheInvincibleRalph/ecommerce:*"]
+  
+  policies = {
+    # Grants permission to push to ECR
+    ECRPush = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+  }
+}
