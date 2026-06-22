@@ -123,6 +123,15 @@ resource "aws_ecr_repository" "monolith" {
   force_delete         = true
 }
 
+resource "aws_ecr_repository" "database_repo" {
+  name                 = "database"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 # 2. The OIDC Provider (Allows GitHub to talk to AWS)
 module "iam_github_oidc_provider" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-provider"
