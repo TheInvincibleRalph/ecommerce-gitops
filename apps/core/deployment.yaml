@@ -18,7 +18,7 @@ spec:
         image: 681504525746.dkr.ecr.us-east-2.amazonaws.com/core-monolith:4590c09d46416cb1829427f26bd6068685248a6c
         ports:
         - containerPort: 80
-      env:
+        env:
         - name: DB_HOST
           value: "database.database-system"
         - name: DB_USER
