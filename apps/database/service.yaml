@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: database-svc
+  name: database
   namespace: database-system
 spec:
-  type: ClusterIP
+  clusterIP: None # Required for StatefulSets to maintain sticky DNS names
   selector:
     app: database
   ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
+    - port: 3306
+      targetPort: 3306

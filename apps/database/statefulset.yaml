@@ -16,9 +16,23 @@ spec:
     spec:
       containers:
       - name: db-container
-        image: postgres:15-alpine
+        image: mysql:8.0
         env:
-        - name: POSTGRES_PASSWORD
-          value: "supersecret" # Fine for a development, will work on securing this later
+        - name: MYSQL_ROOT_PASSWORD
+          value: "supersecret"
+        - name: MYSQL_DATABASE
+          value: "ecommerceapp" # Tells MySQL to create this DB on startup
         ports:
-        - containerPort: 5432
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
