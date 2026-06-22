@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: db-container
-        image: mysql:8.0
+        image: 681504525746.dkr.ecr.us-east-2.amazonaws.com/database:4590c09d46416cb1829427f26bd6068685248a6c
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "supersecret"

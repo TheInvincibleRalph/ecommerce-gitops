@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: app-container
-        image: 681504525746.dkr.ecr.us-east-2.amazonaws.com/core-monolith:e7a11be7674c91a9a5349c9a33076bc940632965
+        image: 681504525746.dkr.ecr.us-east-2.amazonaws.com/core-monolith:4590c09d46416cb1829427f26bd6068685248a6c
         ports:
         - containerPort: 80
