@@ -23,7 +23,7 @@ spec:
           value: "database.database-system"
         - name: DB_USER
           value: "root"
-        - name: DB_PASS
+        - name: DB_PASSWORD
           value: "supersecret"
         - name: DB_NAME
           value: "ecommerceapp"
